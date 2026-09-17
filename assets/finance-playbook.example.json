@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "name": "Example finance contract review playbook",
+  "owner": "Finance Controls",
+  "approved_by": [
+    "Example Finance Controller"
+  ],
+  "effective_date": "2026-01-01",
+  "jurisdictions": [
+    "Example jurisdiction"
+  ],
+  "contract_types": [
+    "vendor services agreement"
+  ],
+  "reviewer_sides": [
+    "payer"
+  ],
+  "rules": [
+    {
+      "id": "PAY-ADV-001",
+      "area": "payment",
+      "title": "Advance payment protection",
+      "severity": "high",
+      "applies_when": "Any payment is due before objective delivery and acceptance.",
+      "preferred_position": "No advance payment; pay after documented acceptance and valid invoice.",
+      "fallback_positions": [
+        "A capped advance supported by an approved bank guarantee or escrow arrangement."
+      ],
+      "prohibited_positions": [
+        "Unsecured 100% advance payment"
+      ],
+      "escalate_to": [
+        "Treasury",
+        "Authorized approver"
+      ],
+      "evidence_required": [
+        "payment clause",
+        "acceptance clause",
+        "security instrument terms"
+      ]
+    },
+    {
+      "id": "REN-AUTO-001",
+      "area": "term_and_renewal",
+      "title": "Automatic renewal control",
+      "severity": "medium",
+      "applies_when": "The agreement renews automatically.",
+      "preferred_position": "Renewal requires affirmative written approval before the current term ends.",
+      "fallback_positions": [
+        "Auto-renewal with at least 60 days' notice and a named renewal owner."
+      ],
+      "prohibited_positions": [],
+      "escalate_to": [
+        "Budget owner"
+      ],
+      "evidence_required": [
+        "term clause",
+        "renewal notice clause"
+      ]
+    }
+  ]
+}

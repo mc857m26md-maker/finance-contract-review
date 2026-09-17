@@ -1,0 +1,28 @@
+{
+  "currency": "CNY",
+  "amounts": {
+    "total_ex_tax": "100000.00",
+    "tax": "6000.00",
+    "total_inc_tax": "106000.00"
+  },
+  "line_items": [
+    {
+      "description": "Service package",
+      "quantity": "10",
+      "unit_price": "10000.00"
+    }
+  ],
+  "milestone_amount_basis": "total_inc_tax",
+  "milestones": [
+    {
+      "name": "Advance",
+      "percent": "30",
+      "amount": "31800.00"
+    },
+    {
+      "name": "Acceptance",
+      "percent": "70",
+      "amount": "74200.00"
+    }
+  ]
+}
