@@ -1,4 +1,0 @@
-interface:
-  display_name: "Finance Contract Review"
-  short_description: "Evidence-first finance contract review and escalation"
-  default_prompt: "Use $finance-contract-review to review this contract from the finance perspective and produce evidence-linked findings."

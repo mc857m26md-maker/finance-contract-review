@@ -1,121 +1,109 @@
-# Finance Contract Review Skill
+# Finance Contract Review
 
-An open, evidence-first Codex skill for reviewing commercial contracts from a finance perspective.
+![Finance Contract Review](assets/social-preview.png)
 
-It turns a contract into a verifiable deal-facts table, arithmetic checks, prioritized findings, approval/escalation items, and a post-signature obligation register. It is designed for controllership, procurement finance, FP&A, shared services, and finance business partners—not as a substitute for legal, tax, treasury, accounting-policy, or authorized business approval.
+[![Tests](https://github.com/mc857m26md-maker/finance-contract-review/actions/workflows/test.yml/badge.svg)](https://github.com/mc857m26md-maker/finance-contract-review/actions/workflows/test.yml)
+[![Pages](https://github.com/mc857m26md-maker/finance-contract-review/actions/workflows/pages.yml/badge.svg)](https://github.com/mc857m26md-maker/finance-contract-review/actions/workflows/pages.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0F172A.svg)](LICENSE)
+[![Plugin](https://img.shields.io/badge/ChatGPT%20%2B%20Codex-Plugin-1E3A8A.svg)](.codex-plugin/plugin.json)
 
-[中文说明](README.zh-CN.md) · [Market landscape](docs/market-landscape.md) · [Example playbook](assets/finance-playbook.example.json)
+**Evidence before confidence.** Finance Contract Review is an open, bilingual agent skill and plugin for first-pass commercial contract review from a finance perspective.
 
-## Why this skill exists
+It turns contract language into source-linked deal facts, deterministic arithmetic checks, prioritized findings, approval routes, and a post-signature obligation register. It is built for controllers, procurement finance, FP&A, accounts payable, shared services, and finance business partners.
 
-Most contract-review products are strong at clause discovery, playbook comparison, redlining, and workflow. Finance reviewers also need deterministic checks that are easy to overlook:
+[中文说明](README.zh-CN.md) · [Live site](https://mc857m26md-maker.github.io/finance-contract-review/) · [Worked example](examples/acme-cloud-services.review.md) · [Market landscape](docs/market-landscape.md)
 
-- amount, tax, line-item, milestone, and currency reconciliation;
-- payment, invoice, delivery, and acceptance alignment;
-- advances, deposits, rebates, credits, renewals, and minimum commitments;
-- approval authority, counterparty and bank-detail controls;
-- accounting-policy, tax, treasury, legal, and security escalation;
-- post-signature obligations with owners, dates, formulas, and evidence.
+## See it catch real finance problems
 
-This skill combines those needs in a tool-neutral workflow. Every material finding must point back to contract evidence or be labeled as not evidenced.
+The included fictional vendor agreement contains five deliberate control failures:
+
+| Finding | Evidence | Finance consequence |
+|---|---|---|
+| Contract total does not reconcile | 100,000 + 6,000 tax, but stated total is 105,000 | Incorrect PO, accrual, invoice, or payment |
+| Payment milestones total 110% | 30% advance + 80% after acceptance | Overpayment exposure |
+| Acceptance is deemed after three days | No objective acceptance criteria | Payment may trigger before usable delivery |
+| Bank changes are accepted by email | No independent callback or dual control | Payment-diversion fraud risk |
+| Renewal price rises 15% automatically | 60-day cancellation notice | Unplanned spend and missed exit window |
+
+Read the [synthetic contract](examples/acme-cloud-services.synthetic.md) and its [evidence-linked review](examples/acme-cloud-services.review.md). No real contract data is included.
 
 ## Install
 
-Clone the repository into your Codex skills directory:
+### Recommended: install the skill from GitHub
 
-```bash
-git clone https://github.com/mc857m26md-maker/finance-contract-review.git ~/.codex/skills/finance-contract-review
-```
-
-Restart or refresh Codex skill discovery if needed. The skill supports normal automatic discovery and can also be invoked explicitly as `$finance-contract-review`.
-
-## Use
-
-Attach the contract and, when available, the SOW/order form, pricing schedule, amendments, approval memo, and company playbook.
-
-Example prompt:
+Ask Codex:
 
 ```text
-Use $finance-contract-review to review this vendor agreement from the buyer/payer side.
-Focus on amount and tax reconciliation, payment versus acceptance, auto-renewal,
-liability exposure, and post-signature obligations. Cite page and clause for every finding.
+Use $skill-installer to install
+https://github.com/mc857m26md-maker/finance-contract-review/tree/main/skills/finance-contract-review
 ```
 
-The skill will ask a question only when a missing choice—most importantly which party you represent—would materially change the result. Otherwise it proceeds with labeled assumptions.
+Start a new conversation after installation. Then attach a contract and say:
+
+```text
+Use $finance-contract-review to review this vendor agreement from the buyer and payer side.
+Check amount and tax reconciliation, payment versus acceptance, renewal, bank-detail controls,
+liability exposure, and post-signature obligations. Cite every material finding.
+```
+
+### Manual skill installation
+
+```bash
+git clone https://github.com/mc857m26md-maker/finance-contract-review.git
+cp -R finance-contract-review/skills/finance-contract-review ~/.agents/skills/
+```
+
+The repository is also packaged as a skills-only plugin under [`.codex-plugin/plugin.json`](.codex-plugin/plugin.json) for catalog and workspace distribution.
 
 ## What it returns
 
-1. Decision status: `Hold`, `Proceed after listed conditions`, or `No finance blocker identified`.
+1. `Hold`, `Proceed after listed conditions`, or `No finance blocker identified`.
 2. Scope, assumptions, missing documents, and reliability limits.
-3. Evidence-linked deal facts.
-4. Arithmetic and cross-document consistency checks.
-5. Prioritized findings with consequence, correction/fallback, owner, and escalation.
-6. Questions and approvals for legal, tax, treasury, accounting policy, procurement, security, or an authorized approver.
-7. A post-signature obligation register.
+3. Evidence-linked deal facts and cross-document checks.
+4. Recomputed totals, taxes, milestones, currencies, and dates.
+5. Prioritized findings with consequence, proposed control, owner, and escalation.
+6. A post-signature obligation register with dates, formulas, and evidence.
 
 `No finance blocker identified` is not legal approval, tax advice, authority to sign, or assurance that no risk exists.
 
-## Playbooks and deterministic checks
-
-Copy `assets/finance-playbook.example.json`, replace the placeholders, and have the relevant control owners approve the rules before operational use.
-
-Validate a playbook:
+## Deterministic checks
 
 ```bash
-python scripts/validate_playbook.py assets/finance-playbook.example.json
-```
+python skills/finance-contract-review/scripts/validate_playbook.py \
+  skills/finance-contract-review/assets/finance-playbook.example.json
 
-Check extracted financial terms:
+python skills/finance-contract-review/scripts/verify_terms.py \
+  skills/finance-contract-review/assets/deal-terms.example.json
 
-```bash
-python scripts/verify_terms.py assets/deal-terms.example.json
-```
-
-The arithmetic helper checks only the structured values supplied to it. It does not extract terms from documents or make legal, tax, or accounting judgments.
-Its JSON fields and exit codes are documented in [references/structured-terms-schema.md](references/structured-terms-schema.md). In particular, exit code `1` means checks ran successfully and found a reconciliation failure; exit code `2` means invalid input or a runtime error.
-
-Run the unit tests:
-
-```bash
 python -m unittest discover -s tests -v
 ```
 
-## Design principles
+The arithmetic helper checks only supplied structured values. It does not extract terms or make legal, tax, or accounting judgments. Exit code `1` means checks ran and found a reconciliation failure; exit code `2` means invalid input or runtime failure.
 
-- **Evidence before confidence:** findings include stable contract locators and minimal source excerpts.
-- **Role-aware:** payer and payee risk can be opposite under the same wording.
-- **Playbook-driven:** preferred, fallback, prohibited, and escalation positions remain distinct.
-- **Deterministic where possible:** calculations are recomputed, not guessed by a language model.
-- **Human accountability:** the skill routes decisions to named owners and never grants approval.
-- **Lifecycle-minded:** accepted terms become post-signature tasks, not forgotten prose.
-- **Privacy-conscious:** contract text is not sent to an external service without authorization.
+## Why this is different
 
-## Repository contents
+- **Finance-first:** payment, invoice, tax, acceptance, rebates, renewal, authority, and cash exposure.
+- **Evidence-linked:** every material conclusion points to a clause, page, heading, or exact excerpt.
+- **Deterministic where possible:** arithmetic is recalculated rather than guessed.
+- **Playbook-driven:** preferred, fallback, prohibited, and escalation positions stay distinct.
+- **Lifecycle-minded:** accepted terms become owned post-signature tasks.
+- **Human-accountable:** the skill routes decisions and never grants approval.
 
-```text
-finance-contract-review/
-├── SKILL.md
-├── agents/openai.yaml
-├── assets/
-│   ├── deal-terms.example.json
-│   ├── finance-playbook.example.json
-│   └── review-report-template.md
-├── docs/market-landscape.md
-├── references/
-│   ├── finance-review-checklist.md
-│   ├── output-format.md
-│   ├── risk-and-escalation.md
-│   └── structured-terms-schema.md
-└── scripts/
-    ├── validate_playbook.py
-    └── verify_terms.py
-```
+## Privacy and safety
 
-## Contributing and security
+This package does not operate a server or collect telemetry by itself. Confirm that the host product and connected tools are approved for the data involved. Never upload real contracts or confidential playbooks to public issues or pull requests. See [Privacy](PRIVACY.md), [Security](SECURITY.md), and [Terms](TERMS.md).
 
-Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Do not put real contracts, personal data, credentials, privileged material, or confidential company playbooks in issues or pull requests. Report security concerns as described in [SECURITY.md](SECURITY.md).
+## Contribute
+
+Finance practitioners are especially welcome. The most valuable contributions are synthetic contracts, reproducible missed checks, approved control patterns, and output examples.
+
+- [Report a bug](https://github.com/mc857m26md-maker/finance-contract-review/issues/new?template=bug_report.yml)
+- [Share privacy-safe usage feedback](https://github.com/mc857m26md-maker/finance-contract-review/issues/new?template=usage_feedback.yml)
+- [Propose a feature](https://github.com/mc857m26md-maker/finance-contract-review/issues/new?template=feature_request.yml)
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [roadmap](ROADMAP.md)
+
+If the project saves you time or prevents a finance-control miss, consider starring it and sharing the worked example with another finance reviewer.
 
 ## License
 
-[MIT](LICENSE). This project provides a review workflow and templates, not legal, tax, accounting, or investment advice.
-
+[MIT](LICENSE)

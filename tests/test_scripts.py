@@ -7,6 +7,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SKILL_ROOT = ROOT / "skills" / "finance-contract-review"
 
 
 def load_module(name, path):
@@ -16,13 +17,13 @@ def load_module(name, path):
     return module
 
 
-validate_playbook = load_module("validate_playbook", ROOT / "scripts" / "validate_playbook.py")
-verify_terms = load_module("verify_terms", ROOT / "scripts" / "verify_terms.py")
+validate_playbook = load_module("validate_playbook", SKILL_ROOT / "scripts" / "validate_playbook.py")
+verify_terms = load_module("verify_terms", SKILL_ROOT / "scripts" / "verify_terms.py")
 
 
 class ValidatePlaybookTests(unittest.TestCase):
     def setUp(self):
-        with (ROOT / "assets" / "finance-playbook.example.json").open(encoding="utf-8") as handle:
+        with (SKILL_ROOT / "assets" / "finance-playbook.example.json").open(encoding="utf-8") as handle:
             self.playbook = json.load(handle)
 
     def test_example_is_valid(self):
@@ -42,7 +43,7 @@ class ValidatePlaybookTests(unittest.TestCase):
 
 class VerifyTermsTests(unittest.TestCase):
     def setUp(self):
-        with (ROOT / "assets" / "deal-terms.example.json").open(encoding="utf-8") as handle:
+        with (SKILL_ROOT / "assets" / "deal-terms.example.json").open(encoding="utf-8") as handle:
             self.terms = json.load(handle)
 
     def test_example_passes_all_checks(self):
@@ -75,6 +76,23 @@ class VerifyTermsTests(unittest.TestCase):
         amount_check = [item for item in results if item["check"] == "milestone_amount_total"][0]
         self.assertEqual("pass", amount_check["status"])
         self.assertEqual("total_ex_tax", amount_check["basis"])
+
+
+class PluginPackageTests(unittest.TestCase):
+    def setUp(self):
+        with (ROOT / ".codex-plugin" / "plugin.json").open(encoding="utf-8") as handle:
+            self.manifest = json.load(handle)
+
+    def test_manifest_points_to_real_skill(self):
+        self.assertEqual("finance-contract-review", self.manifest["name"])
+        self.assertTrue((ROOT / "skills" / "finance-contract-review" / "SKILL.md").is_file())
+
+    def test_manifest_assets_exist(self):
+        interface = self.manifest["interface"]
+        for key in ("composerIcon", "logo"):
+            self.assertTrue((ROOT / interface[key].lstrip("./")).is_file(), key)
+        for path in interface["screenshots"]:
+            self.assertTrue((ROOT / path.lstrip("./")).is_file(), path)
 
 
 if __name__ == "__main__":

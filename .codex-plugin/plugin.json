@@ -1,0 +1,41 @@
+{
+  "name": "finance-contract-review",
+  "version": "1.1.0",
+  "description": "Evidence-first finance contract review with deterministic checks, escalation, and obligation tracking.",
+  "author": {
+    "name": "mc857m26md-maker",
+    "url": "https://github.com/mc857m26md-maker"
+  },
+  "homepage": "https://mc857m26md-maker.github.io/finance-contract-review/",
+  "repository": "https://github.com/mc857m26md-maker/finance-contract-review",
+  "license": "MIT",
+  "keywords": [
+    "contract-review",
+    "finance",
+    "financial-controls",
+    "procurement",
+    "risk-management",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Finance Contract Review",
+    "shortDescription": "Evidence-first contract checks for finance teams.",
+    "longDescription": "Review commercial contracts from the finance side with source-linked findings, deterministic amount checks, playbook deviations, escalation paths, and post-signature obligations.",
+    "developerName": "mc857m26md-maker",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://mc857m26md-maker.github.io/finance-contract-review/",
+    "privacyPolicyURL": "https://github.com/mc857m26md-maker/finance-contract-review/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/mc857m26md-maker/finance-contract-review/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "Review this vendor contract from the buyer and payer perspective.",
+      "Check payment, invoice, acceptance, renewal, and liability terms.",
+      "Create an evidence-linked finance review and obligation register."
+    ],
+    "brandColor": "#0F172A",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "screenshots": ["./assets/social-preview.png"]
+  }
+}

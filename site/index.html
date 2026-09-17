@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finance Contract Review — 财务合同审核 Skill</title>
+  <meta name="description" content="面向财务团队的开源合同审核 Skill 与 Plugin：证据定位、金额重算、风险升级与签后义务台账。">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="canonical" href="https://mc857m26md-maker.github.io/finance-contract-review/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Finance Contract Review">
+  <meta property="og:description" content="Evidence-first contract review for finance teams.">
+  <meta property="og:image" content="https://mc857m26md-maker.github.io/finance-contract-review/assets/social-preview.png">
+  <meta property="og:url" content="https://mc857m26md-maker.github.io/finance-contract-review/">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --ink: #020617;
+      --navy: #0f172a;
+      --blue: #1e3a8a;
+      --gold: #a16207;
+      --paper: #f8fafc;
+      --card: #ffffff;
+      --muted: #475569;
+      --line: #d8e0ea;
+      --danger: #b91c1c;
+      --success: #166534;
+      --radius: 18px;
+      --shadow: 0 18px 48px rgba(15, 23, 42, .08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.65; }
+    a { color: var(--blue); text-underline-offset: .2em; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+    .skip { position: absolute; left: 12px; top: -80px; z-index: 100; background: white; padding: 12px 16px; border-radius: 10px; }
+    .skip:focus { top: 12px; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header { border-bottom: 1px solid var(--line); background: rgba(248, 250, 252, .96); }
+    nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; color: var(--navy); font-weight: 800; text-decoration: none; }
+    .brand img { width: 40px; height: 40px; border-radius: 10px; }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a { color: var(--navy); font-weight: 650; text-decoration: none; }
+    .hero { padding: 88px 0 64px; }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 52px; }
+    .eyebrow { display: inline-flex; gap: 8px; align-items: center; padding: 7px 12px; border: 1px solid #d6b878; border-radius: 999px; background: #fff9e8; color: #713f12; font-size: .88rem; font-weight: 750; }
+    h1 { margin: 22px 0 18px; color: var(--navy); font-size: clamp(2.45rem, 6vw, 4.8rem); line-height: 1.02; letter-spacing: -.055em; text-wrap: balance; }
+    .lead { max-width: 680px; color: #334155; font-size: clamp(1.05rem, 2vw, 1.28rem); }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; border: 1px solid var(--navy); border-radius: 12px; font: inherit; font-weight: 750; text-decoration: none; cursor: pointer; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
+    .button.primary { background: var(--navy); color: white; }
+    .button.primary:hover { background: var(--blue); }
+    .button.secondary { background: white; color: var(--navy); }
+    .button.secondary:hover { border-color: var(--gold); color: #713f12; }
+    .hero-card { overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: var(--card); box-shadow: var(--shadow); }
+    .hero-card img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; }
+    .hero-card p { margin: 0; padding: 16px 18px; color: var(--muted); font-size: .92rem; }
+    section { padding: 72px 0; }
+    .section-kicker { margin: 0 0 8px; color: var(--gold); font-size: .85rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    h2 { margin: 0 0 16px; color: var(--navy); font-size: clamp(1.85rem, 4vw, 3rem); line-height: 1.15; letter-spacing: -.035em; text-wrap: balance; }
+    .section-lead { max-width: 760px; margin: 0 0 34px; color: var(--muted); font-size: 1.08rem; }
+    .proof { background: var(--navy); color: white; }
+    .proof h2 { color: white; }
+    .proof .section-kicker { color: #fbbf24; }
+    .proof .section-lead { color: #d7e1ef; }
+    .risk-grid, .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .risk, .feature { padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: 0 8px 28px rgba(15, 23, 42, .05); }
+    .proof .risk { border-color: #334155; background: #111c31; box-shadow: none; }
+    .risk strong, .feature strong { display: block; margin-bottom: 9px; font-size: 1.08rem; }
+    .proof .risk p { color: #d7e1ef; }
+    .risk p, .feature p { margin: 0; color: var(--muted); }
+    .risk .severity { display: inline-block; margin-bottom: 14px; padding: 4px 9px; border-radius: 999px; background: #fee2e2; color: var(--danger); font-size: .78rem; font-weight: 800; }
+    .install { display: grid; grid-template-columns: .82fr 1.18fr; gap: 28px; align-items: start; }
+    .terminal { position: relative; padding: 22px; border-radius: var(--radius); background: #020617; color: #e2e8f0; box-shadow: var(--shadow); }
+    .terminal pre { margin: 0; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 500 .9rem/1.7 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .copy { margin-top: 18px; min-height: 44px; padding: 9px 14px; border: 1px solid #64748b; border-radius: 10px; background: transparent; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+    .copy:hover { border-color: #fbbf24; }
+    .status { min-height: 1.6em; margin: 10px 0 0; color: #fde68a; font-size: .88rem; }
+    .cta { padding: 42px; border-radius: 24px; background: #fff9e8; border: 1px solid #e7cf9e; }
+    footer { padding: 34px 0 52px; border-top: 1px solid var(--line); color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    @media (max-width: 860px) {
+      .hero { padding-top: 56px; }
+      .hero-grid, .install { grid-template-columns: 1fr; }
+      .risk-grid, .feature-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links a:not(.button) { display: none; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1120px); }
+      .risk-grid, .feature-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 2.55rem; }
+      section { padding: 54px 0; }
+      .cta { padding: 26px; }
+      .brand span { max-width: 190px; line-height: 1.15; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "Finance Contract Review",
+    "codeRepository": "https://github.com/mc857m26md-maker/finance-contract-review",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/license/mit",
+    "description": "Evidence-first contract review skill and plugin for finance teams."
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到主要内容</a>
+  <header>
+    <nav class="wrap" aria-label="主要导航">
+      <a class="brand" href="#top"><img src="assets/icon.png" alt=""><span>Finance Contract Review</span></a>
+      <div class="nav-links">
+        <a href="#demo">审核示例</a>
+        <a href="#install">安装</a>
+        <a class="button secondary" href="https://github.com/mc857m26md-maker/finance-contract-review">查看 GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">开源 · 双语 · 财务优先</span>
+          <h1>先有证据，<br>再有结论。</h1>
+          <p class="lead">把商业合同转化为可复核的交易事实、金额重算、风险升级和签后义务台账。为财务 BP、采购财务、FP&amp;A、应付和共享中心而设计。</p>
+          <div class="actions">
+            <a class="button primary" href="#install">5 分钟开始使用</a>
+            <a class="button secondary" href="https://github.com/mc857m26md-maker/finance-contract-review/blob/main/examples/acme-cloud-services.review.md">查看完整报告</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="assets/social-preview.png" width="1280" height="640" alt="Finance Contract Review 品牌预览图">
+          <p>Evidence-linked findings · deterministic checks · human accountability</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" id="demo">
+      <div class="wrap">
+        <p class="section-kicker">Worked example</p>
+        <h2>一份虚构合同，五个真实控制问题</h2>
+        <p class="section-lead">示例完整公开，不使用客户材料，也不要求你先相信模型。</p>
+        <div class="risk-grid">
+          <article class="risk"><span class="severity">Critical</span><strong>总金额少了 CNY 1,000</strong><p>不含税金额与税额相加后，无法得到合同总额。</p></article>
+          <article class="risk"><span class="severity">Critical</span><strong>付款比例达到 110%</strong><p>30% 预付款叠加 80% 验收款，形成明确超付路径。</p></article>
+          <article class="risk"><span class="severity">Critical</span><strong>邮件即可修改账户</strong><p>缺少独立回拨、供应商主数据控制和双人审批。</p></article>
+          <article class="risk"><span class="severity">High</span><strong>三天自动视为验收</strong><p>没有客观标准，付款可能早于真正可用的交付。</p></article>
+          <article class="risk"><span class="severity">High</span><strong>自动续期并涨价 15%</strong><p>需要提前 60 天退出，容易造成预算外支出。</p></article>
+          <article class="risk"><span class="severity">High</span><strong>关键附件缺失</strong><p>Schedule A 决定交付和验收，却未随合同提供。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <p class="section-kicker">Finance-first</p>
+        <h2>不是泛泛总结，而是能交给财务复核的工作底稿</h2>
+        <p class="section-lead">每个重要判断都区分合同事实、计算结果、企业规则偏差、专业判断和未知项。</p>
+        <div class="feature-grid">
+          <article class="feature"><strong>证据定位</strong><p>重要结论指向页码、条款、标题或最小必要原文。</p></article>
+          <article class="feature"><strong>确定性计算</strong><p>重算金额、税额、付款比例和跨文件一致性。</p></article>
+          <article class="feature"><strong>审批边界</strong><p>把法律、税务、资金和会计判断交给正确责任人。</p></article>
+          <article class="feature"><strong>企业 Playbook</strong><p>区分首选、备选、禁止和必须升级的条款位置。</p></article>
+          <article class="feature"><strong>签后义务</strong><p>将续期、返利、通知、验收和付款变成责任台账。</p></article>
+          <article class="feature"><strong>隐私意识</strong><p>公开反馈只接受虚构或充分匿名化的复现材料。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <div class="wrap install">
+        <div>
+          <p class="section-kicker">Install</p>
+          <h2>从 GitHub 安装</h2>
+          <p class="section-lead">把下面的指令交给 Codex。安装后新建会话，再上传需要审核的合同。</p>
+        </div>
+        <div class="terminal">
+          <pre id="install-command">使用 $skill-installer 安装：
+https://github.com/mc857m26md-maker/finance-contract-review/tree/main/skills/finance-contract-review</pre>
+          <button class="copy" type="button" id="copy-button">复制安装指令</button>
+          <p class="status" id="copy-status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap cta">
+        <p class="section-kicker">Open source</p>
+        <h2>用虚构案例验证，用真实反馈改进</h2>
+        <p class="section-lead">如果项目帮你节省了时间或避免了控制遗漏，请在 GitHub 留下隐私安全的反馈，并把它分享给另一位财务审核人员。</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/mc857m26md-maker/finance-contract-review">Star on GitHub</a>
+          <a class="button secondary" href="https://github.com/mc857m26md-maker/finance-contract-review/issues/new?template=usage_feedback.yml">提交使用反馈</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>MIT Licensed · Not legal, tax, or accounting advice.</span>
+      <span><a href="https://github.com/mc857m26md-maker/finance-contract-review/blob/main/PRIVACY.md">Privacy</a> · <a href="https://github.com/mc857m26md-maker/finance-contract-review/blob/main/SECURITY.md">Security</a></span>
+    </div>
+  </footer>
+
+  <script>
+    const button = document.getElementById('copy-button');
+    const status = document.getElementById('copy-status');
+    button.addEventListener('click', async () => {
+      const value = document.getElementById('install-command').textContent;
+      try {
+        await navigator.clipboard.writeText(value);
+        status.textContent = '已复制。请粘贴到 Codex。';
+      } catch (_) {
+        status.textContent = '无法自动复制，请手工选择上方文字。';
+      }
+    });
+  </script>
+</body>
+</html>

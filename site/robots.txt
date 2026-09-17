@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mc857m26md-maker.github.io/finance-contract-review/sitemap.xml
